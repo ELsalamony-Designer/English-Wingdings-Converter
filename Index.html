@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English ⇆ Wingdings Converter</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+    body {
+        background: #000;
+        color: #fff;
+        font-family: 'Press Start 2P', cursive;
+        text-align: center;
+        overflow: hidden;
+    }
+    h1 { font-size: 18px; margin-top: 10px; }
+    textarea {
+        width: 80%;
+        height: 60px;
+        font-size: 14px;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 2px solid white;
+        background: black;
+        color: white;
+        resize: none;
+    }
+    .wingdings {
+        font-family: "Wingdings";
+    }
+    select, button {
+        font-family: 'Press Start 2P', cursive;
+        padding: 8px;
+        margin: 5px;
+        background: black;
+        border: 2px solid white;
+        color: white;
+        cursor: pointer;
+    }
+    select:hover, button:hover {
+        background: white;
+        color: black;
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+    .by-section {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    .wingdings-btn {
+        font-family: "Wingdings";
+        cursor: pointer;
+        color: white;
+        background: none;
+        border: none;
+        font-size: 20px;
+        padding: 5px;
+    }
+    .wingdings-btn:hover {
+        color: #aaa;
+    }
+</style>
+</head>
+<body>
+
+<h1>English ⇆ Wingdings Converter</h1>
+
+<select id="mode">
+    <option value="toWingdings">English → Wingdings</option>
+    <option value="toEnglish">Wingdings → English</option>
+</select>
+
+<br>
+<textarea id="inputText" placeholder="Type here..."></textarea>
+<br>
+<button onclick="convert()">Convert</button>
+<br>
+<textarea id="outputText" readonly></textarea>
+
+<!-- BY section -->
+<div class="by-section">
+    BY: 
+    <button class="wingdings-btn" id="wingLink" onclick="window.open('https://www.tiktok.com/@2lsalamony', '_blank')">
+        ABCDEFGHIJ
+    </button>
+</div>
+
+<canvas id="rain"></canvas>
+
+<script>
+// === Conversion Functions ===
+function convert() {
+    let mode = document.getElementById("mode").value;
+    let input = document.getElementById("inputText").value;
+    let output = "";
+
+    if (mode === "toWingdings") {
+        output = input; 
+        document.getElementById("outputText").classList.add("wingdings");
+    } else {
+        output = input; 
+        document.getElementById("outputText").classList.remove("wingdings");
+    }
+
+    document.getElementById("outputText").value = output;
+}
+
+// === Wingdings Falling Effect (White) ===
+const canvas = document.getElementById("rain");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const wingChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+const fontSize = 20;
+const columns = Math.floor(canvas.width / fontSize);
+const drops = [];
+
+for (let x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#fff";
+    ctx.font = fontSize + "px Wingdings";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = wingChars.charAt(Math.floor(Math.random() * wingChars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+            drops[i] = 0;
+
+        drops[i]++;
+    }
+}
+
+setInterval(draw, 33);
+
+// === Change Wingdings Button Text Every 0.5s (Keep Same Length) ===
+const btn = document.getElementById("wingLink");
+const fixedLength = btn.textContent.length; // عدد الحروف اللي هيفضل ثابت
+
+function randomWingdingsText(len) {
+    let result = "";
+    for (let i = 0; i < len; i++) {
+        result += wingChars.charAt(Math.floor(Math.random() * wingChars.length));
+    }
+    return result;
+}
+
+setInterval(() => {
+    btn.textContent = randomWingdingsText(fixedLength);
+}, 500); // نص ثانية
+</script>
+
+</body>
+</html>
