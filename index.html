@@ -78,6 +78,7 @@
 <textarea id="inputText" placeholder="Type here..."></textarea>
 <br>
 <button onclick="convert()">Convert</button>
+<button onclick="copyResult()">Copy Result</button>
 <br>
 <textarea id="outputText" readonly></textarea>
 
@@ -107,6 +108,16 @@ function convert() {
     }
 
     document.getElementById("outputText").value = output;
+}
+
+// === Copy Function ===
+function copyResult() {
+    const outputText = document.getElementById("outputText").value;
+    navigator.clipboard.writeText(outputText).then(() => {
+        alert("✅ Wingdings text copied!");
+    }).catch(err => {
+        alert("❌ Failed to copy: " + err);
+    });
 }
 
 // === Wingdings Falling Effect (White) ===
@@ -145,7 +156,7 @@ setInterval(draw, 33);
 
 // === Change Wingdings Button Text Every 0.5s (Keep Same Length) ===
 const btn = document.getElementById("wingLink");
-const fixedLength = btn.textContent.length; // عدد الحروف اللي هيفضل ثابت
+const fixedLength = btn.textContent.length;
 
 function randomWingdingsText(len) {
     let result = "";
@@ -157,7 +168,7 @@ function randomWingdingsText(len) {
 
 setInterval(() => {
     btn.textContent = randomWingdingsText(fixedLength);
-}, 500); // نص ثانية
+}, 500);
 </script>
 
 </body>
