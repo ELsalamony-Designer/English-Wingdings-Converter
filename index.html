@@ -12,6 +12,7 @@
         color: #fff;
         margin: 0;
     }
+
     body::before {
         content: "";
         position: fixed;
@@ -24,20 +25,8 @@
         top: 0;
         z-index: -1;
     }
-    h1 { 
-        font-size: 18px; 
-        margin-top: 10px; 
-        margin-bottom: 20px; /* مسافة بين العنوان وباقي العناصر */
-    }
-    #bySection {
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
-    #bySection span {
-        cursor: pointer;
-        color: yellow;
-        text-decoration: underline;
-    }
+
+    h1 { font-size: 18px; margin-top: 10px; }
     textarea {
         width: 80%;
         height: 60px;
@@ -50,7 +39,7 @@
         color: white;
         resize: none;
     }
-    button {
+    select, button {
         font-family: 'Press Start 2P', cursive;
         padding: 8px;
         margin: 5px;
@@ -59,7 +48,7 @@
         color: white;
         cursor: pointer;
     }
-    button:hover {
+    select:hover, button:hover {
         background: white;
         color: black;
     }
@@ -69,94 +58,77 @@
         left: 0;
         z-index: -1;
     }
+
+    /* BY: تحت */
+    #bySection {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-family: 'Press Start 2P', cursive;
+        cursor: pointer;
+        background: rgba(0,0,0,0.5);
+        padding: 5px 10px;
+        border: 2px solid white;
+        border-radius: 5px;
+    }
 </style>
 </head>
 <body>
 
 <h1>English ⇆ Wingdings Converter</h1>
-
-<div id="bySection">
-    BY: <span id="randomWingdings" onclick="goToTikTok()">----</span>
-</div>
-
+<select id="mode">
+    <option value="toWing">English ➜ Wingdings</option>
+    <option value="toEng">Wingdings ➜ English</option>
+</select>
+<br>
 <textarea id="inputText" placeholder="Type here..."></textarea>
 <br>
+<button onclick="convert()">Convert</button>
 <button onclick="copyResult()">Copy</button>
 <br>
 <textarea id="outputText" readonly placeholder="Result..."></textarea>
 
+<!-- BY: -->
+<div id="bySection">
+    BY: <span id="randomSymbols">****</span>
+</div>
+
 <canvas id="rain"></canvas>
 
 <script>
-// رابط التيك توك
-function goToTikTok() {
-    window.open("https://www.tiktok.com/@2lsalamony?is_from_webapp=1&sender_device=pc", "_blank");
-}
-
-// مولد رموز وينجدنجز عشوائية
-const wingCharsRandom = Object.values({
-    "A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎"
-});
-
-function updateRandomWingdings() {
-    let str = "";
-    for (let i = 0; i < 4; i++) {
-        str += wingCharsRandom[Math.floor(Math.random() * wingCharsRandom.length)];
-    }
-    document.getElementById("randomWingdings").textContent = str;
-}
-setInterval(updateRandomWingdings, 250);
-updateRandomWingdings();
-
-// مابات التحويل
+// === التحويل من إنجليزي → الرموز ===
 const charMap = {
     "0":"📁︎","1":"📂︎","2":"📄︎","3":"🗏︎","4":"🗐︎","5":"🗄︎","6":"⌛︎","7":"🖮︎","8":"🖰︎","9":"🖲︎","!":"✏︎","\"":"✂︎","#":"✁︎","$":"👓︎","%":"🕭︎","&":"🕮︎","'":"🕯︎","(":"🕿︎",")":"✆︎","*":"🖂︎","+":"🖃︎",",":"📪︎","-":"📫︎",".":"📬︎","/":"📭︎",":":"🖳︎",";":"🖴︎","<":"🖫︎","=":"🖬︎",">":"✇︎","?":"✍︎","A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎","[":"☯︎","\\":"ॐ︎","]":"☸︎","^":"♈︎","_":"♉︎","`":"♊︎","a":"♋︎","b":"♌︎","c":"♍︎","d":"♎︎","e":"♏︎","f":"♐︎","g":"♑︎","h":"♒︎","i":"♓︎","j":"🙰","k":"🙵","l":"●︎","m":"❍︎","n":"■︎","o":"□︎","p":"◻︎","q":"❑︎","r":"❒︎","s":"⬧︎","t":"⧫︎","u":"◆︎","v":"❖︎","w":"⬥︎","x":"⌧︎","y":"⍓︎","z":"⌘︎","{":"❀︎","|":"✿︎","}":"❝︎","~":"❞︎"
 };
+
+// === التحويل من الرموز → إنجليزي ===
 const newCharMap = {
     "✏":"!","✂":"\"","✁":"#","👓":"$","🕭":"%","🕮":"&","🕯":"'","🕿":"(","✆":")","🖂":"*","🖃":"+","📪":",","📫":"-","📬":".","📭":"/","📁":"0","📂":"1","📄":"2","🗏":"3","🗐":"4","🗄":"5","⌛":"6","🖮":"7","🖰":"8","🖲":"9","🖳":":","🖴":";","🖫":"<","🖬":"=","✇":">","✍":"?","✌":"A","👌":"B","👍":"C","👎":"D","☜":"E","☞":"F","☝":"G","☟":"H","✋":"I","☺":"J","😐":"K","☹":"L","💣":"M","☠":"N","⚐":"O","🏱":"P","✈":"Q","☼":"R","💧":"S","❄":"T","🕆":"U","✞":"V","🕈":"W","✠":"X","✡":"Y","☪":"Z","☯":"[","ॐ":"\\","☸":"]","♈":"^","♉":"_","♊":"`","♋":"a","♌":"b","♍":"c","♎":"d","♏":"e","♐":"f","♑":"g","♒":"h","♓":"i","🙰":"j","🙵":"k","●":"l","❍":"m","■":"n","□":"o","◻":"p","❑":"q","❒":"r","⬧":"s","⧫":"t","◆":"u","❖":"v","⬥":"w","⌧":"x","⍓":"y","⌘":"z","❀":"{","✿":"|","❝":"}","❞":"~"
 };
 
-// تقسيم الرموز مع الحفاظ على المسافات والـ variation selectors
-function splitSymbolsWithSpaces(str) {
-    let result = [];
-    for (let i = 0; i < str.length; i++) {
-        let ch = str[i];
-        if (i + 1 < str.length && (str.charCodeAt(i + 1) === 0xFE0E || str.charCodeAt(i + 1) === 0xFE0F)) {
-            ch += str[i + 1];
-            i++;
-        }
-        result.push(ch);
-    }
-    return result;
-}
-
-// تحويل تلقائي
-function autoDetectAndConvert() {
+// === التحويل ===
+function convert() {
+    let mode = document.getElementById("mode").value;
     let input = document.getElementById("inputText").value;
-    let englishCount = (input.match(/[A-Za-z0-9]/g) || []).length;
-    let symbolCount = input.length - englishCount;
     let output = "";
 
-    if (englishCount >= symbolCount) {
-        splitSymbolsWithSpaces(input).forEach(ch => {
-            output += ch === " " ? " " : (charMap[ch] || ch);
-        });
-    } else {
-        splitSymbolsWithSpaces(input).forEach(ch => {
-            if (ch === " ") {
-                output += " ";
-            } else {
-                let clean = ch.replace(/\uFE0E|\uFE0F/g, "");
-                output += newCharMap[clean] || clean;
-            }
-        });
+    if (mode === "toWing") {
+        output = input.split("").map(ch => (charMap[ch] || ch) + " ").join("");
+    } else if (mode === "toEng") {
+        input = input.replace(/\s+/g, ""); // إزالة المسافات
+        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\S/gu) || [];
+        for (let s of symbols) {
+            let clean = s.replace(/\uFE0E|\uFE0F/g, "");
+            output += newCharMap[clean] || clean;
+        }
     }
+
     document.getElementById("outputText").value = output;
 }
 
-document.getElementById("inputText").addEventListener("input", autoDetectAndConvert);
-
-// نسخ النتيجة
+// === نسخ النتيجة ===
 function copyResult() {
     const outputText = document.getElementById("outputText").value;
     navigator.clipboard.writeText(outputText).then(() => {
@@ -166,7 +138,7 @@ function copyResult() {
     });
 }
 
-// تأثير المطر
+// === تأثير المطر ===
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
@@ -190,7 +162,23 @@ function draw() {
     }
 }
 setInterval(draw, 33);
+
+// === BY: الرموز العشوائية ===
+const allSymbols = Object.values(charMap);
+const randomSpan = document.getElementById("randomSymbols");
+setInterval(() => {
+    let r = "";
+    for (let i = 0; i < 4; i++) {
+        r += allSymbols[Math.floor(Math.random() * allSymbols.length)];
+    }
+    randomSpan.textContent = r;
+}, 250);
+
+document.getElementById("bySection").addEventListener("click", () => {
+    window.open("https://www.tiktok.com/@2lsalamony?is_from_webapp=1&sender_device=pc", "_blank");
+});
 </script>
 
 </body>
 </html>
+
