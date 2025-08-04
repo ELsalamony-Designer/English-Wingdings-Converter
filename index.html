@@ -6,12 +6,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
     body {
-        background: #000;
-        color: #fff;
         font-family: 'Press Start 2P', cursive;
         text-align: center;
         overflow: hidden;
+        color: #fff;
+        margin: 0;
     }
+
+    body::before {
+        content: "";
+        position: fixed;
+        background-image: url('https://i.imgur.com/gSEBUIX.png');
+        background-size: cover;
+        background-position: center;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        z-index: -1;
+    }
+
     h1 { font-size: 18px; margin-top: 10px; }
     textarea {
         width: 80%;
@@ -21,18 +35,15 @@
         margin: 10px 0;
         border-radius: 5px;
         border: 2px solid white;
-        background: black;
+        background: rgba(0,0,0,0.6);
         color: white;
         resize: none;
-    }
-    .wingdings {
-        font-family: "Wingdings";
     }
     select, button {
         font-family: 'Press Start 2P', cursive;
         padding: 8px;
         margin: 5px;
-        background: black;
+        background: rgba(0,0,0,0.6);
         border: 2px solid white;
         color: white;
         cursor: pointer;
@@ -47,128 +58,90 @@
         left: 0;
         z-index: -1;
     }
-    .by-section {
-        margin-top: 20px;
-        font-size: 14px;
-    }
-    .wingdings-btn {
-        font-family: "Wingdings";
-        cursor: pointer;
-        color: white;
-        background: none;
-        border: none;
-        font-size: 20px;
-        padding: 5px;
-    }
-    .wingdings-btn:hover {
-        color: #aaa;
-    }
 </style>
 </head>
 <body>
 
 <h1>English ⇆ Wingdings Converter</h1>
-
 <select id="mode">
-    <option value="toWingdings">English → Wingdings</option>
-    <option value="toEnglish">Wingdings → English</option>
+    <option value="toWing">English ➜ Wingdings</option>
+    <option value="toEng">Wingdings ➜ English</option>
 </select>
-
 <br>
 <textarea id="inputText" placeholder="Type here..."></textarea>
 <br>
 <button onclick="convert()">Convert</button>
-<button onclick="copyResult()">Copy Result</button>
+<button onclick="copyResult()">Copy</button>
 <br>
-<textarea id="outputText" readonly></textarea>
-
-<!-- BY section -->
-<div class="by-section">
-    BY: 
-    <button class="wingdings-btn" id="wingLink" onclick="window.open('https://www.tiktok.com/@2lsalamony', '_blank')">
-        ABCDEFGHIJ
-    </button>
-</div>
+<textarea id="outputText" readonly placeholder="Result..."></textarea>
 
 <canvas id="rain"></canvas>
 
 <script>
-// === Conversion Functions ===
+
+const charMap = {
+    "0":"📁︎","1":"📂︎","2":"📄︎","3":"🗏︎","4":"🗐︎","5":"🗄︎","6":"⌛︎","7":"🖮︎","8":"🖰︎","9":"🖲︎","!":"✏︎","\"":"✂︎","#":"✁︎","$":"👓︎","%":"🕭︎","&":"🕮︎","'":"🕯︎","(":"🕿︎",")":"✆︎","*":"🖂︎","+":"🖃︎",",":"📪︎","-":"📫︎",".":"📬︎","/":"📭︎",":":"🖳︎",";":"🖴︎","<":"🖫︎","=":"🖬︎",">":"✇︎","?":"✍︎","A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎","[":"☯︎","\\":"ॐ︎","]":"☸︎","^":"♈︎","_":"♉︎","`":"♊︎","a":"♋︎","b":"♌︎","c":"♍︎","d":"♎︎","e":"♏︎","f":"♐︎","g":"♑︎","h":"♒︎","i":"♓︎","j":"🙰","k":"🙵","l":"●︎","m":"❍︎","n":"■︎","o":"□︎","p":"◻︎","q":"❑︎","r":"❒︎","s":"⬧︎","t":"⧫︎","u":"◆︎","v":"❖︎","w":"⬥︎","x":"⌧︎","y":"⍓︎","z":"⌘︎","{":"❀︎","|":"✿︎","}":"❝︎","~":"❞︎"
+};
+
+// 
+const newCharMap = {
+    "✏":"!","✂":"\"","✁":"#","👓":"$","🕭":"%","🕮":"&","🕯":"'","🕿":"(","✆":")","🖂":"*","🖃":"+","📪":",","📫":"-","📬":".","📭":"/","📁":"0","📂":"1","📄":"2","🗏":"3","🗐":"4","🗄":"5","⌛":"6","🖮":"7","🖰":"8","🖲":"9","🖳":":","🖴":";","🖫":"<","🖬":"=","✇":">","✍":"?","✌":"A","👌":"B","👍":"C","👎":"D","☜":"E","☞":"F","☝":"G","☟":"H","✋":"I","☺":"J","😐":"K","☹":"L","💣":"M","☠":"N","⚐":"O","🏱":"P","✈":"Q","☼":"R","💧":"S","❄":"T","🕆":"U","✞":"V","🕈":"W","✠":"X","✡":"Y","☪":"Z","☯":"[","ॐ":"\\","☸":"]","♈":"^","♉":"_","♊":"`","♋":"a","♌":"b","♍":"c","♎":"d","♏":"e","♐":"f","♑":"g","♒":"h","♓":"i","🙰":"j","🙵":"k","●":"l","❍":"m","■":"n","□":"o","◻":"p","❑":"q","❒":"r","⬧":"s","⧫":"t","◆":"u","❖":"v","⬥":"w","⌧":"x","⍓":"y","⌘":"z","❀":"{","✿":"|","❝":"}","❞":"~"
+};
+
+// 
 function convert() {
     let mode = document.getElementById("mode").value;
     let input = document.getElementById("inputText").value;
     let output = "";
 
-    if (mode === "toWingdings") {
-        output = input; 
-        document.getElementById("outputText").classList.add("wingdings");
-    } else {
-        output = input; 
-        document.getElementById("outputText").classList.remove("wingdings");
+    if (mode === "toWing") {
+        output = input.split("").map(ch => charMap[ch] || ch).join("");
+    } else if (mode === "toEng") {
+        // Regex يمسك كل الرموز حتى لو فيها Variation Selector
+        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\S/gu) || [];
+        for (let s of symbols) {
+            let clean = s.replace(/\uFE0E|\uFE0F/g, ""); // إزالة variation selectors
+            output += newCharMap[clean] || clean;
+        }
     }
 
     document.getElementById("outputText").value = output;
 }
 
-// === Copy Function ===
+// 
 function copyResult() {
     const outputText = document.getElementById("outputText").value;
     navigator.clipboard.writeText(outputText).then(() => {
-        alert("✅ Wingdings text copied!");
+        alert("✅ Copied!");
     }).catch(err => {
         alert("❌ Failed to copy: " + err);
     });
 }
 
-// === Wingdings Falling Effect (White) ===
+// 
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
-
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
-
 const wingChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 const fontSize = 20;
 const columns = Math.floor(canvas.width / fontSize);
 const drops = [];
-
 for (let x = 0; x < columns; x++) drops[x] = 1;
 
 function draw() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "#fff";
     ctx.font = fontSize + "px Wingdings";
-
     for (let i = 0; i < drops.length; i++) {
         const text = wingChars.charAt(Math.floor(Math.random() * wingChars.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-            drops[i] = 0;
-
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
     }
 }
-
 setInterval(draw, 33);
-
-// === Change Wingdings Button Text Every 0.5s (Keep Same Length) ===
-const btn = document.getElementById("wingLink");
-const fixedLength = btn.textContent.length;
-
-function randomWingdingsText(len) {
-    let result = "";
-    for (let i = 0; i < len; i++) {
-        result += wingChars.charAt(Math.floor(Math.random() * wingChars.length));
-    }
-    return result;
-}
-
-setInterval(() => {
-    btn.textContent = randomWingdingsText(fixedLength);
-}, 500);
 </script>
 
 </body>
