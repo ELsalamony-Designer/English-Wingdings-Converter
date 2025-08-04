@@ -12,7 +12,6 @@
         color: #fff;
         margin: 0;
     }
-
     body::before {
         content: "";
         position: fixed;
@@ -25,7 +24,6 @@
         top: 0;
         z-index: -1;
     }
-
     h1 { font-size: 18px; margin-top: 10px; }
     textarea {
         width: 80%;
@@ -93,14 +91,14 @@ function convert() {
     let output = "";
 
     if (mode === "toWing") {
-        output = input.split("").map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
+        output = input.split(/( )/g).map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
     } else {
-        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\s|\S/gu) || [];
+        let symbols = input.split(/( )/g); // المسافة كجزء منفصل
         for (let s of symbols) {
             if (s === " ") {
                 output += " ";
             } else {
-                let clean = s.replace(/\uFE0E|\uFE0F/g, "");
+                let clean = s.replace(/\uFE0E|\uFE0F/g, ""); // إزالة variation selectors
                 output += newCharMap[clean] || clean;
             }
         }
@@ -116,9 +114,9 @@ function autoDetectAndConvert() {
     let symbolCount = input.length - englishCount;
 
     if (englishCount >= symbolCount) {
-        output = input.split("").map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
+        output = input.split(/( )/g).map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
     } else {
-        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\s|\S/gu) || [];
+        let symbols = input.split(/( )/g);
         for (let s of symbols) {
             if (s === " ") {
                 output += " ";
@@ -176,4 +174,3 @@ setInterval(draw, 33);
 
 </body>
 </html>
-
