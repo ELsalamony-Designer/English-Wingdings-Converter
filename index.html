@@ -97,29 +97,35 @@
 
 <canvas id="rain"></canvas>
 
+<!-- Spotify Music -->
+<iframe style="display:none;" src="https://discord.com/channels/@me/1400582678595637259/1402013003729342525" width="0" height="0" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+
 <script>
-// === التحويل من إنجليزي → الرموز ===
 const charMap = {
     "0":"📁︎","1":"📂︎","2":"📄︎","3":"🗏︎","4":"🗐︎","5":"🗄︎","6":"⌛︎","7":"🖮︎","8":"🖰︎","9":"🖲︎","!":"✏︎","\"":"✂︎","#":"✁︎","$":"👓︎","%":"🕭︎","&":"🕮︎","'":"🕯︎","(":"🕿︎",")":"✆︎","*":"🖂︎","+":"🖃︎",",":"📪︎","-":"📫︎",".":"📬︎","/":"📭︎",":":"🖳︎",";":"🖴︎","<":"🖫︎","=":"🖬︎",">":"✇︎","?":"✍︎","A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎","[":"☯︎","\\":"ॐ︎","]":"☸︎","^":"♈︎","_":"♉︎","`":"♊︎","a":"♋︎","b":"♌︎","c":"♍︎","d":"♎︎","e":"♏︎","f":"♐︎","g":"♑︎","h":"♒︎","i":"♓︎","j":"🙰","k":"🙵","l":"●︎","m":"❍︎","n":"■︎","o":"□︎","p":"◻︎","q":"❑︎","r":"❒︎","s":"⬧︎","t":"⧫︎","u":"◆︎","v":"❖︎","w":"⬥︎","x":"⌧︎","y":"⍓︎","z":"⌘︎","{":"❀︎","|":"✿︎","}":"❝︎","~":"❞︎"
 };
 
-// === التحويل من الرموز → إنجليزي ===
 const newCharMap = {
     "✏":"!","✂":"\"","✁":"#","👓":"$","🕭":"%","🕮":"&","🕯":"'","🕿":"(","✆":")","🖂":"*","🖃":"+","📪":",","📫":"-","📬":".","📭":"/","📁":"0","📂":"1","📄":"2","🗏":"3","🗐":"4","🗄":"5","⌛":"6","🖮":"7","🖰":"8","🖲":"9","🖳":":","🖴":";","🖫":"<","🖬":"=","✇":">","✍":"?","✌":"A","👌":"B","👍":"C","👎":"D","☜":"E","☞":"F","☝":"G","☟":"H","✋":"I","☺":"J","😐":"K","☹":"L","💣":"M","☠":"N","⚐":"O","🏱":"P","✈":"Q","☼":"R","💧":"S","❄":"T","🕆":"U","✞":"V","🕈":"W","✠":"X","✡":"Y","☪":"Z","☯":"[","ॐ":"\\","☸":"]","♈":"^","♉":"_","♊":"`","♋":"a","♌":"b","♍":"c","♎":"d","♏":"e","♐":"f","♑":"g","♒":"h","♓":"i","🙰":"j","🙵":"k","●":"l","❍":"m","■":"n","□":"o","◻":"p","❑":"q","❒":"r","⬧":"s","⧫":"t","◆":"u","❖":"v","⬥":"w","⌧":"x","⍓":"y","⌘":"z","❀":"{","✿":"|","❝":"}","❞":"~"
 };
 
-// === التحويل ===
 function convert() {
     let mode = document.getElementById("mode").value;
     let input = document.getElementById("inputText").value;
     let output = "";
 
     if (mode === "toWing") {
-        output = input.split("").map(ch => (charMap[ch] || ch) + " ").join("");
+        output = input.split("").map(ch => {
+            if (ch === " ") return " "; // حافظ على المسافات
+            return charMap[ch] || ch;
+        }).join("");
     } else if (mode === "toEng") {
-        input = input.replace(/\s+/g, ""); // إزالة المسافات
-        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\S/gu) || [];
+        let symbols = input.match(/[\p{Emoji}\u2600-\u26FF\u2700-\u27BF\uFE0E\uFE0F]|\S|\s/gu) || [];
         for (let s of symbols) {
+            if (s === " ") {
+                output += " ";
+                continue;
+            }
             let clean = s.replace(/\uFE0E|\uFE0F/g, "");
             output += newCharMap[clean] || clean;
         }
@@ -128,7 +134,6 @@ function convert() {
     document.getElementById("outputText").value = output;
 }
 
-// === نسخ النتيجة ===
 function copyResult() {
     const outputText = document.getElementById("outputText").value;
     navigator.clipboard.writeText(outputText).then(() => {
@@ -138,7 +143,6 @@ function copyResult() {
     });
 }
 
-// === تأثير المطر ===
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
@@ -163,7 +167,6 @@ function draw() {
 }
 setInterval(draw, 33);
 
-// === BY: الرموز العشوائية ===
 const allSymbols = Object.values(charMap);
 const randomSpan = document.getElementById("randomSymbols");
 setInterval(() => {
@@ -181,4 +184,3 @@ document.getElementById("bySection").addEventListener("click", () => {
 
 </body>
 </html>
-
