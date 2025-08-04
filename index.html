@@ -24,7 +24,20 @@
         top: 0;
         z-index: -1;
     }
-    h1 { font-size: 18px; margin-top: 10px; }
+    h1 { 
+        font-size: 18px; 
+        margin-top: 10px; 
+        margin-bottom: 20px; /* مسافة بين العنوان وباقي العناصر */
+    }
+    #bySection {
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    #bySection span {
+        cursor: pointer;
+        color: yellow;
+        text-decoration: underline;
+    }
     textarea {
         width: 80%;
         height: 60px;
@@ -37,7 +50,7 @@
         color: white;
         resize: none;
     }
-    select, button {
+    button {
         font-family: 'Press Start 2P', cursive;
         padding: 8px;
         margin: 5px;
@@ -46,7 +59,7 @@
         color: white;
         cursor: pointer;
     }
-    select:hover, button:hover {
+    button:hover {
         background: white;
         color: black;
     }
@@ -61,14 +74,13 @@
 <body>
 
 <h1>English ⇆ Wingdings Converter</h1>
-<select id="mode">
-    <option value="toWing">English ➜ Wingdings</option>
-    <option value="toEng">Wingdings ➜ English</option>
-</select>
-<br>
+
+<div id="bySection">
+    BY: <span id="randomWingdings" onclick="goToTikTok()">----</span>
+</div>
+
 <textarea id="inputText" placeholder="Type here..."></textarea>
 <br>
-<button onclick="convert()">Convert</button>
 <button onclick="copyResult()">Copy</button>
 <br>
 <textarea id="outputText" readonly placeholder="Result..."></textarea>
@@ -76,7 +88,27 @@
 <canvas id="rain"></canvas>
 
 <script>
-// المابات
+// رابط التيك توك
+function goToTikTok() {
+    window.open("https://www.tiktok.com/@2lsalamony?is_from_webapp=1&sender_device=pc", "_blank");
+}
+
+// مولد رموز وينجدنجز عشوائية
+const wingCharsRandom = Object.values({
+    "A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎"
+});
+
+function updateRandomWingdings() {
+    let str = "";
+    for (let i = 0; i < 4; i++) {
+        str += wingCharsRandom[Math.floor(Math.random() * wingCharsRandom.length)];
+    }
+    document.getElementById("randomWingdings").textContent = str;
+}
+setInterval(updateRandomWingdings, 250);
+updateRandomWingdings();
+
+// مابات التحويل
 const charMap = {
     "0":"📁︎","1":"📂︎","2":"📄︎","3":"🗏︎","4":"🗐︎","5":"🗄︎","6":"⌛︎","7":"🖮︎","8":"🖰︎","9":"🖲︎","!":"✏︎","\"":"✂︎","#":"✁︎","$":"👓︎","%":"🕭︎","&":"🕮︎","'":"🕯︎","(":"🕿︎",")":"✆︎","*":"🖂︎","+":"🖃︎",",":"📪︎","-":"📫︎",".":"📬︎","/":"📭︎",":":"🖳︎",";":"🖴︎","<":"🖫︎","=":"🖬︎",">":"✇︎","?":"✍︎","A":"✌︎","B":"👌︎","C":"👍︎","D":"👎︎","E":"☜︎","F":"☞︎","G":"☝︎","H":"☟︎","I":"✋︎","J":"☺︎","K":"😐︎","L":"☹︎","M":"💣︎","N":"☠︎","O":"⚐︎","P":"🏱︎","Q":"✈︎","R":"☼︎","S":"💧︎","T":"❄︎","U":"🕆︎","V":"✞︎","W":"🕈︎","X":"✠︎","Y":"✡︎","Z":"☪︎","[":"☯︎","\\":"ॐ︎","]":"☸︎","^":"♈︎","_":"♉︎","`":"♊︎","a":"♋︎","b":"♌︎","c":"♍︎","d":"♎︎","e":"♏︎","f":"♐︎","g":"♑︎","h":"♒︎","i":"♓︎","j":"🙰","k":"🙵","l":"●︎","m":"❍︎","n":"■︎","o":"□︎","p":"◻︎","q":"❑︎","r":"❒︎","s":"⬧︎","t":"⧫︎","u":"◆︎","v":"❖︎","w":"⬥︎","x":"⌧︎","y":"⍓︎","z":"⌘︎","{":"❀︎","|":"✿︎","}":"❝︎","~":"❞︎"
 };
@@ -84,57 +116,45 @@ const newCharMap = {
     "✏":"!","✂":"\"","✁":"#","👓":"$","🕭":"%","🕮":"&","🕯":"'","🕿":"(","✆":")","🖂":"*","🖃":"+","📪":",","📫":"-","📬":".","📭":"/","📁":"0","📂":"1","📄":"2","🗏":"3","🗐":"4","🗄":"5","⌛":"6","🖮":"7","🖰":"8","🖲":"9","🖳":":","🖴":";","🖫":"<","🖬":"=","✇":">","✍":"?","✌":"A","👌":"B","👍":"C","👎":"D","☜":"E","☞":"F","☝":"G","☟":"H","✋":"I","☺":"J","😐":"K","☹":"L","💣":"M","☠":"N","⚐":"O","🏱":"P","✈":"Q","☼":"R","💧":"S","❄":"T","🕆":"U","✞":"V","🕈":"W","✠":"X","✡":"Y","☪":"Z","☯":"[","ॐ":"\\","☸":"]","♈":"^","♉":"_","♊":"`","♋":"a","♌":"b","♍":"c","♎":"d","♏":"e","♐":"f","♑":"g","♒":"h","♓":"i","🙰":"j","🙵":"k","●":"l","❍":"m","■":"n","□":"o","◻":"p","❑":"q","❒":"r","⬧":"s","⧫":"t","◆":"u","❖":"v","⬥":"w","⌧":"x","⍓":"y","⌘":"z","❀":"{","✿":"|","❝":"}","❞":"~"
 };
 
-// التحويل اليدوي مع الحفاظ على المسافات
-function convert() {
-    let mode = document.getElementById("mode").value;
-    let input = document.getElementById("inputText").value;
-    let output = "";
-
-    if (mode === "toWing") {
-        output = input.split(/( )/g).map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
-    } else {
-        let symbols = input.split(/( )/g); // المسافة كجزء منفصل
-        for (let s of symbols) {
-            if (s === " ") {
-                output += " ";
-            } else {
-                let clean = s.replace(/\uFE0E|\uFE0F/g, ""); // إزالة variation selectors
-                output += newCharMap[clean] || clean;
-            }
+// تقسيم الرموز مع الحفاظ على المسافات والـ variation selectors
+function splitSymbolsWithSpaces(str) {
+    let result = [];
+    for (let i = 0; i < str.length; i++) {
+        let ch = str[i];
+        if (i + 1 < str.length && (str.charCodeAt(i + 1) === 0xFE0E || str.charCodeAt(i + 1) === 0xFE0F)) {
+            ch += str[i + 1];
+            i++;
         }
+        result.push(ch);
     }
-    document.getElementById("outputText").value = output;
+    return result;
 }
 
-// التحويل التلقائي مع الحفاظ على المسافات
+// تحويل تلقائي
 function autoDetectAndConvert() {
     let input = document.getElementById("inputText").value;
-    let output = "";
     let englishCount = (input.match(/[A-Za-z0-9]/g) || []).length;
     let symbolCount = input.length - englishCount;
+    let output = "";
 
     if (englishCount >= symbolCount) {
-        output = input.split(/( )/g).map(ch => ch === " " ? " " : (charMap[ch] || ch)).join("");
+        splitSymbolsWithSpaces(input).forEach(ch => {
+            output += ch === " " ? " " : (charMap[ch] || ch);
+        });
     } else {
-        let symbols = input.split(/( )/g);
-        for (let s of symbols) {
-            if (s === " ") {
+        splitSymbolsWithSpaces(input).forEach(ch => {
+            if (ch === " ") {
                 output += " ";
             } else {
-                let clean = s.replace(/\uFE0E|\uFE0F/g, "");
+                let clean = ch.replace(/\uFE0E|\uFE0F/g, "");
                 output += newCharMap[clean] || clean;
             }
-        }
+        });
     }
     document.getElementById("outputText").value = output;
 }
 
-// التحديث التلقائي عند الكتابة أو المسافة
-document.getElementById("inputText").addEventListener("keyup", function(e) {
-    if (e.code === "Space" || e.key.length === 1) {
-        autoDetectAndConvert();
-    }
-});
+document.getElementById("inputText").addEventListener("input", autoDetectAndConvert);
 
 // نسخ النتيجة
 function copyResult() {
