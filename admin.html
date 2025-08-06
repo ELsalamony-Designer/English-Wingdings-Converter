@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #111;
+            color: white;
+            padding: 20px;
+        }
+        h1 { text-align: center; }
+        .log-item {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Panel: All Conversions</h1>
+    <div id="conversionLog">
+        </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnBLj3TddA9cji250B6WNUA6OeTTVRDds",
+            authDomain: "websites-saver.firebaseapp.com",
+            databaseURL: "https://websites-saver-default-rtdb.firebaseio.com",
+            projectId: "websites-saver",
+            storageBucket: "websites-saver.firebasestorage.app",
+            messagingSenderId: "226873622619",
+            appId: "1:226873622619:web:d2284e411277612dceff7e",
+            measurementId: "G-QSHC9FZNHW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const conversionLogRef = database.ref('conversions');
+
+        const conversionLogElement = document.getElementById('conversionLog');
+
+        // Listen for changes in the database and display them
+        conversionLogRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            conversionLogElement.innerHTML = ''; // Clear previous data
+            if (data) {
+                // Loop through the data and create an element for each log
+                for (let key in data) {
+                    const item = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'log-item';
+                    div.innerHTML = `
+                        <strong>Input:</strong> ${item.input}<br>
+                        <strong>Output:</strong> ${item.output}<br>
+                        <strong>Mode:</strong> ${item.mode}<br>
+                        <strong>Timestamp:</strong> ${new Date(item.timestamp).toLocaleString()}
+                    `;
+                    conversionLogElement.appendChild(div);
+                }
+            } else {
+                conversionLogElement.innerHTML = 'No conversions found.';
+            }
+        });
+    </script>
+</body>
+</html>
