@@ -59,7 +59,7 @@
         z-index: -1;
     }
 
-    /* BY: تحت */
+    /* BY: section at the bottom */
     #bySection {
         position: fixed;
         bottom: 10px;
@@ -90,14 +90,12 @@
 <br>
 <textarea id="outputText" readonly placeholder="Result..."></textarea>
 
-<!-- BY: -->
 <div id="bySection">
     BY: <span id="randomSymbols">****</span>
 </div>
 
 <canvas id="rain"></canvas>
 
-<!-- Spotify Music -->
 <iframe style="display:none;" src="https://github.com/ELsalamony-Designer/English-Wingdings-Converter/blob/main/AUDIO_ANOTHERHIM.ogg" width="0" height="0" frameborder="0" allow="autoplay; encrypted-media"></iframe>
 
 <script>
@@ -111,12 +109,18 @@ const newCharMap = {
 
 function convert() {
     let mode = document.getElementById("mode").value;
-    let input = document.getElementById("inputText").value;
+    let input = document.getElementById("inputText").value.trim();
     let output = "";
+
+    // Check for the specific password input and redirect
+    if (input === "Password:333") {
+        window.location.href = "login.html"; // Redirect to the login page
+        return; // Stop the function here
+    }
 
     if (mode === "toWing") {
         output = input.split("").map(ch => {
-            if (ch === " ") return " "; // حافظ على المسافات
+            if (ch === " ") return " ";
             return charMap[ch] || ch;
         }).join("");
     } else if (mode === "toEng") {
